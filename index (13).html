@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adiaha's Writing & Reading Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Password Screen */
+        .password-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+        }
+
+        .password-screen.hidden {
+            display: none;
+        }
+
+        .password-box {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .password-box h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .password-box p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .password-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .password-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .password-error {
+            color: #dc3545;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            display: none;
+        }
+
+        .container.visible {
+            display: block;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #dee2e6;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            background: #e9ecef;
+            border: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #495057;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab:hover {
+            background: #dee2e6;
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #f093fb;
+        }
+
+        /* Topic Selection */
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .topic-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .topic-card.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .topic-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .topic-card p {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .topic-card.selected p {
+            color: white;
+        }
+
+        /* Writing Area */
+        .writing-container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .writing-area {
+            width: 100%;
+            min-height: 400px;
+            padding: 20px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-family: 'Georgia', serif;
+            line-height: 1.8;
+            resize: vertical;
+        }
+
+        .word-count {
+            text-align: right;
+            color: #666;
+            margin-top: 10px;
+            font-size: 0.95em;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin: 20px 0;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Feedback Display */
+        .feedback-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 3px solid #667eea;
+            display: none;
+        }
+
+        .feedback-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .overall-score {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .overall-score h2 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .rubric-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .rubric-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .rubric-score {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .rubric-score.needs-improvement {
+            background: #ffc107;
+        }
+
+        .rubric-score.poor {
+            background: #dc3545;
+        }
+
+        /* Reading Comprehension */
+        .passage-container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .passage-text {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            font-size: 1.15em;
+            line-height: 2;
+            font-family: 'Georgia', serif;
+            border: 2px solid #667eea;
+        }
+
+        .passage-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .question-container {
+            margin: 30px 0;
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .option.correct {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .open-answer {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 1.05em;
+            font-family: 'Georgia', serif;
+            resize: vertical;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .loading-spinner.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .instructions h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Password Screen -->
+    <div class="password-screen" id="passwordScreen">
+        <div class="password-box">
+            <h1>🔒 Welcome!</h1>
+            <p>Enter your password to access the writing practice tool</p>
+            <input type="password" class="password-input" id="passwordInput" placeholder="Enter password">
+            <button class="password-btn" onclick="checkPassword()">Enter</button>
+            <p class="password-error" id="passwordError">❌ Incorrect password. Try again!</p>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container" id="mainContainer">
+        <div class="header">
+            <h1>✍️ Adiaha's Writing & Reading Practice ✍️</h1>
+            <p>Improve your composition and comprehension skills with AI-powered feedback!</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('composition')">📝 Composition</button>
+            <button class="nav-tab" onclick="showTab('comprehension')">📖 Reading Comprehension</button>
+        </div>
+
+        <!-- Composition Tab -->
+        <div id="composition" class="tab-content active">
+            <h2 class="section-title">📝 Composition Practice</h2>
+            
+            <div class="instructions">
+                <h4>📝 Instructions:</h4>
+                <p>1. Choose a topic that interests you<br>
+                2. Write your essay in the text box (aim for at least 150 words)<br>
+                3. Click "Submit for Grading" to get detailed feedback<br>
+                4. Review your feedback and learn from the suggestions!</p>
+            </div>
+
+            <div id="topicSelection">
+                <h3 style="color: #667eea; margin: 20px 0;">Choose Your Topic:</h3>
+                <div class="topic-grid">
+                    <div class="topic-card" onclick="selectTopic(0)">
+                        <h3>🐕 A Day with Cookie, Kreme, and Coco</h3>
+                        <p>Write about an adventure or special day with your three dogs. What do they like to do? What makes each one special?</p>
+                    </div>
+                    <div class="topic-card" onclick="selectTopic(1)">
+                        <h3>🌷 My Adventures in Holland</h3>
+                        <p>Describe your trip to Holland this summer. What did you see? What was your favorite experience? How was it different from home?</p>
+                    </div>
+                    <div class="topic-card" onclick="selectTopic(2)">
+                        <h3>🏝️ Life on Our Island Paradise</h3>
+                        <p>Explain what it's like to live on an island. What makes island life special? What do you love most about it?</p>
+                    </div>
+                    <div class="topic-card" onclick="selectTopic(3)">
+                        <h3>🎮 If I Could Build Anything in Minecraft</h3>
+                        <p>Imagine you could build anything you want in Minecraft. What would you create? How would it work? Be creative!</p>
+                    </div>
+                    <div class="topic-card" onclick="selectTopic(4)">
+                        <h3>🎵 My Journey as a Calypso Singer</h3>
+                        <p>Write about your experiences singing Calypso. What do you love about it? How does it make you feel? What's your favorite song?</p>
+                    </div>
+                    <div class="topic-card" onclick="selectTopic(5)">
+                        <h3>🍕 The Perfect Pizza Party</h3>
+                        <p>Describe your dream pizza party. Who would you invite? What toppings would you have? What would make it perfect?</p>
+                    </div>
+                    <div class="topic-card" onclick="selectTopic(6)">
+                        <h3>⭐ A Person Who Inspires Me</h3>
+                        <p>Write about someone who inspires you. Why do they inspire you? What have you learned from them?</p>
+                    </div>
+                    <div class="topic-card" onclick="selectTopic(7)">
+                        <h3>🦸‍♀️ If I Could Have Any Superpower</h3>
+                        <p>If you could have any superpower, what would it be? How would you use it to help others? What adventures would you have?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="writing-container" id="writingArea" style="display: none;">
+                <h3 style="color: #667eea; margin-bottom: 20px;" id="selectedTopicTitle"></h3>
+                <textarea class="writing-area" id="essayText" placeholder="Start writing your essay here..." oninput="updateWordCount()"></textarea>
+                <div class="word-count" id="wordCount">Word count: 0</div>
+                <button class="submit-btn" onclick="submitEssay()" id="submitBtn">Submit for Grading</button>
+                <button class="back-btn" onclick="backToTopics()">← Choose Different Topic</button>
+            </div>
+
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+                <p style="margin-top: 20px; color: #667eea; font-weight: bold;">Grading your essay... Please wait!</p>
+            </div>
+
+            <div class="feedback-container" id="feedbackContainer">
+                <!-- Feedback will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Reading Comprehension Tab -->
+        <div id="comprehension" class="tab-content">
+            <h2 class="section-title">📖 Reading Comprehension</h2>
+            
+            <div class="instructions">
+                <h4>📚 Instructions:</h4>
+                <p>1. Read the passage carefully<br>
+                2. Answer the multiple choice and open-ended questions<br>
+                3. Click "Submit Answers" to check your work<br>
+                4. Review the feedback and learn from any mistakes!</p>
+            </div>
+
+            <div id="passageSelection">
+                <h3 style="color: #667eea; margin: 20px 0;">Choose a Passage to Read:</h3>
+                <div class="topic-grid">
+                    <div class="topic-card" onclick="selectPassage(0)">
+                        <h3>🏝️ The Secret of Turtle Island</h3>
+                        <p>Fiction - A group of friends discover something mysterious on a small Caribbean island</p>
+                    </div>
+                    <div class="topic-card" onclick="selectPassage(1)">
+                        <h3>🎵 The History of Calypso Music</h3>
+                        <p>Informational - Learn about the origins and importance of Calypso in the Caribbean</p>
+                    </div>
+                    <div class="topic-card" onclick="selectPassage(2)">
+                        <h3>🎨 Vincent van Gogh: The Starry Artist</h3>
+                        <p>Biography - Discover the life of the famous European painter</p>
+                    </div>
+                    <div class="topic-card" onclick="selectPassage(3)">
+                        <h3>🐕 Max's Big Adventure</h3>
+                        <p>Narrative - A funny story about a clever dog and his mischievous day</p>
+                    </div>
+                    <div class="topic-card" onclick="selectPassage(4)">
+                        <h3>🎮 How Video Games Help Kids Learn</h3>
+                        <p>Expository - Explore the educational benefits of games like Minecraft and Roblox</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="passageReading" style="display: none;">
+                <!-- Passage content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const correctPassword = "ilovemydaddy!!";
+        let selectedTopicIndex = -1;
+        let selectedPassageIndex = -1;
+        // API key is now securely stored on Netlify server
+
+        const topics = [
+            {
+                title: "🐕 A Day with Cookie, Kreme, and Coco",
+                prompt: "Write about an adventure or special day with your three dogs. What do they like to do? What makes each one special?"
+            },
+            {
+                title: "🌷 My Adventures in Holland",
+                prompt: "Describe your trip to Holland this summer. What did you see? What was your favorite experience?"
+            },
+            {
+                title: "🏝️ Life on Our Island Paradise",
+                prompt: "Explain what it's like to live on an island. What makes island life special?"
+            },
+            {
+                title: "🎮 If I Could Build Anything in Minecraft",
+                prompt: "Imagine you could build anything you want in Minecraft. What would you create?"
+            },
+            {
+                title: "🎵 My Journey as a Calypso Singer",
+                prompt: "Write about your experiences singing Calypso. What do you love about it?"
+            },
+            {
+                title: "🍕 The Perfect Pizza Party",
+                prompt: "Describe your dream pizza party with all your favorite toppings."
+            },
+            {
+                title: "⭐ A Person Who Inspires Me",
+                prompt: "Write about someone who inspires you and why."
+            },
+            {
+                title: "🦸‍♀️ If I Could Have Any Superpower",
+                prompt: "If you could have any superpower, what would it be and how would you use it?"
+            }
+        ];
+
+        const passages = [
+            {
+                title: "The Secret of Turtle Island",
+                text: `Maya loved living on her small Caribbean island. Every day after school, she would run down to the beach with her best friends, Carlos and Amara. They would search for seashells, watch the pelicans dive for fish, and dream about adventures.
+
+One sunny afternoon, they noticed something unusual. An old wooden boat had washed up on the shore near Turtle Island, a tiny island just a short swim from the beach. The three friends looked at each other with excitement in their eyes.
+
+"Should we investigate?" asked Carlos, his eyes wide with curiosity.
+
+"Definitely!" said Amara. "But we should be careful. The currents around Turtle Island can be strong."
+
+They swam carefully to the small island, pulling the old boat onto the sand. Inside, they found a rusty metal box. Maya's heart raced as she opened it. Inside was a faded map and a note that read: "To whoever finds this: The island's greatest treasure is not gold or jewels, but something far more valuable."
+
+The friends studied the map, which showed different locations around their island. Over the next few days, they followed the clues. The map led them to the old lighthouse, then to the banyan tree in the town square, and finally to the island's library.
+
+At the library, the librarian, Ms. Rodriguez, smiled when she saw the map. "Ah," she said. "You found Captain Morrison's treasure hunt! He was a teacher who lived here fifty years ago. He loved this island and wanted children to discover its stories."
+
+She led them to a special section of the library filled with books about their island's history, its plants and animals, and stories written by islanders long ago. "This," she said, "is the real treasure. The knowledge and stories of your home."
+
+Maya, Carlos, and Amara realized that Captain Morrison was right. Learning about their island's history and culture was more valuable than any gold. They spent the whole summer reading those books, and Maya even started writing her own stories about island life.`,
+                questions: [
+                    {
+                        type: "multiple",
+                        question: "What did Maya and her friends find inside the old boat?",
+                        options: [
+                            "Gold coins and jewels",
+                            "A rusty metal box with a map and note",
+                            "Fishing equipment",
+                            "A message in a bottle"
+                        ],
+                        correct: 1
+                    },
+                    {
+                        type: "multiple",
+                        question: "What was Captain Morrison's profession?",
+                        options: [
+                            "A fisherman",
+                            "A pirate",
+                            "A teacher",
+                            "A librarian"
+                        ],
+                        correct: 2
+                    },
+                    {
+                        type: "multiple",
+                        question: "What was the 'real treasure' according to the story?",
+                        options: [
+                            "The old wooden boat",
+                            "Money hidden in the library",
+                            "Knowledge and stories about the island",
+                            "The rusty metal box"
+                        ],
+                        correct: 2
+                    },
+                    {
+                        type: "open",
+                        question: "Why do you think Captain Morrison created this treasure hunt? What was he trying to teach the children who found it?",
+                        rubric: "Good answer mentions: wanting children to learn about their island's history/culture, the value of knowledge over material wealth, appreciation for their home, or similar themes about education and cultural heritage."
+                    },
+                    {
+                        type: "open",
+                        question: "Have you ever discovered something interesting about your own home or community? Describe what you learned and how it made you feel.",
+                        rubric: "Good answer includes: a personal experience, what was discovered, feelings about the discovery, and makes a connection to their own life. Should be at least 2-3 sentences."
+                    }
+                ]
+            },
+            {
+                title: "The History of Calypso Music",
+                text: `Calypso music is one of the Caribbean's most vibrant and important cultural treasures. This musical style was born in Trinidad and Tobago in the early 1900s, but its roots go back much further, to the traditions of enslaved Africans who were brought to the Caribbean.
+
+In the days when slavery existed, enslaved people were not allowed to speak to each other in their native languages or gather freely. However, they found a way to communicate through songs. These songs, called "kaiso," were a form of storytelling and news-sharing. Singers would use clever lyrics and wordplay to share information, comment on current events, and even criticize those in power—all while making it sound like entertainment.
+
+As time passed, these traditions evolved into what we now call Calypso. The word "calypso" might come from the West African word "kaiso," which means "bravo!" or from the French "carrousseaux," which were party songs. No one knows for sure, but what we do know is that Calypso became a powerful voice for the people.
+
+Calypso singers, called "calypsonians," are like modern-day news reporters and poets combined. They sing about everything from politics to everyday life, from serious social issues to funny situations. The songs often have a catchy rhythm that makes you want to dance, but the lyrics are clever and meaningful.
+
+One of the most famous calypsonians was Mighty Sparrow, who used his music to comment on social and political issues. Another legendary figure was Lord Kitchener, known for his upbeat songs that celebrated Caribbean culture and life.
+
+Every year during Carnival, new Calypso songs are performed in competitions. The Calypso Monarch competition is one of the most prestigious events, where singers compete to create the best new song. Young singers, even children, participate in Junior Calypso competitions, keeping this important tradition alive for future generations.
+
+Today, Calypso has influenced many other music styles, including reggae, soca, and even hip-hop. Artists around the world have been inspired by Calypso's rhythm and its tradition of using music to tell stories and speak truth to power.
+
+Calypso is more than just music—it's a living history of the Caribbean people, their struggles, their joy, and their creativity. When you listen to Calypso, you're hearing centuries of culture, resistance, and celebration all wrapped up in a song.`,
+                questions: [
+                    {
+                        type: "multiple",
+                        question: "Where did Calypso music originate?",
+                        options: [
+                            "Jamaica",
+                            "Trinidad and Tobago",
+                            "Barbados",
+                            "Cuba"
+                        ],
+                        correct: 1
+                    },
+                    {
+                        type: "multiple",
+                        question: "What were the early songs called that led to Calypso?",
+                        options: [
+                            "Reggae",
+                            "Soca",
+                            "Kaiso",
+                            "Rumba"
+                        ],
+                        correct: 2
+                    },
+                    {
+                        type: "multiple",
+                        question: "According to the passage, calypsonians are compared to:",
+                        options: [
+                            "News reporters and poets",
+                            "Teachers and preachers",
+                            "Athletes and dancers",
+                            "Politicians and lawyers"
+                        ],
+                        correct: 0
+                    },
+                    {
+                        type: "open",
+                        question: "Why was music such an important form of communication for enslaved people in the Caribbean? Explain using details from the passage.",
+                        rubric: "Good answer explains: they weren't allowed to speak their languages or gather freely, music was a way to share information and news, they could criticize power through clever lyrics disguised as entertainment, or similar understanding of music as resistance and communication."
+                    },
+                    {
+                        type: "open",
+                        question: "How does Calypso music continue to be important today? Give at least two examples from the passage.",
+                        rubric: "Good answer mentions at least two of: Carnival and Calypso Monarch competitions, Junior Calypso keeping traditions alive, influence on other music styles (reggae, soca, hip-hop), telling stories and speaking truth to power, or celebrating Caribbean culture."
+                    }
+                ]
+            },
+            {
+                title: "Vincent van Gogh: The Starry Artist",
+                text: `Vincent van Gogh is one of the most famous painters in the world, known for his bold, colorful paintings that capture emotion and movement. Born in the Netherlands in 1853, Vincent lived a difficult but creative life that has inspired millions of people.
+
+As a young man, Vincent tried many different jobs. He worked as an art dealer, a teacher, and even a missionary helping poor coal miners. But none of these jobs felt quite right. It wasn't until he was 27 years old that Vincent decided to become an artist. This was quite late to start compared to most painters!
+
+Vincent didn't have formal training at first, but he was determined to learn. He practiced drawing every single day, sometimes making hundreds of sketches. He studied the work of other artists and taught himself about color and composition. His hard work paid off—he developed a unique style that no one had seen before.
+
+What made Vincent's paintings special was how he used color and brushstrokes. Instead of trying to paint things exactly as they looked, he painted how they felt. He would use thick layers of paint and bold, swirling brushstrokes. In his famous painting "The Starry Night," the sky seems to move and dance with energy, filled with swirling stars and a bright crescent moon.
+
+Vincent loved to paint the world around him. He painted sunflowers, wheat fields, his bedroom, and the people he knew. He also painted many self-portraits because he couldn't always afford to pay models to pose for him. In total, he created over 2,000 artworks in just ten years!
+
+Sadly, Vincent struggled with mental illness and poverty for most of his life. He was supported by his younger brother Theo, who believed in Vincent's talent and sent him money for art supplies. The two brothers wrote hundreds of letters to each other, and these letters help us understand Vincent's thoughts and feelings about art and life.
+
+During his lifetime, Vincent only sold one painting. Most people didn't understand or appreciate his unique style. But after his death in 1890 at the age of 37, his work became recognized as brilliant and revolutionary. Today, his paintings are worth millions of dollars and are displayed in museums around the world.
+
+Vincent van Gogh's story teaches us important lessons. It shows us that it's never too late to follow your passion. It reminds us that being different and unique is valuable, even if others don't understand it right away. Most importantly, it shows us that hard work, dedication, and believing in yourself can create something truly beautiful.
+
+Today, when you visit museums in the Netherlands, France, or anywhere else in the world, you can see Vincent's paintings and feel the same emotion and energy that he put into every brushstroke over a century ago.`,
+                questions: [
+                    {
+                        type: "multiple",
+                        question: "How old was Vincent van Gogh when he decided to become an artist?",
+                        options: [
+                            "17 years old",
+                            "27 years old",
+                            "37 years old",
+                            "47 years old"
+                        ],
+                        correct: 1
+                    },
+                    {
+                        type: "multiple",
+                        question: "Who supported Vincent financially during his life?",
+                        options: [
+                            "His mother",
+                            "Art dealers",
+                            "His brother Theo",
+                            "The government"
+                        ],
+                        correct: 2
+                    },
+                    {
+                        type: "multiple",
+                        question: "What made Vincent's painting style unique?",
+                        options: [
+                            "He painted exactly what he saw",
+                            "He only used black and white",
+                            "He painted how things felt using bold colors and swirling brushstrokes",
+                            "He painted very tiny, detailed pictures"
+                        ],
+                        correct: 2
+                    },
+                    {
+                        type: "open",
+                        question: "What does Vincent van Gogh's story teach us about following our dreams? Use specific examples from the passage to support your answer.",
+                        rubric: "Good answer includes: it's never too late to follow your passion (started at 27), hard work and practice are important (practiced daily), being unique is valuable, believing in yourself matters, or supporting each other's dreams (Theo's support). Should include at least one specific example from the passage."
+                    },
+                    {
+                        type: "open",
+                        question: "Why do you think Vincent's paintings became famous after his death but not during his lifetime? What does this tell us about art and creativity?",
+                        rubric: "Good answer discusses: people didn't understand his unique style at first, sometimes it takes time for new ideas to be appreciated, being different can be misunderstood, the value of art isn't always recognized immediately, or similar insights about innovation and acceptance."
+                    }
+                ]
+            },
+            {
+                title: "Max's Big Adventure",
+                text: `Max was not an ordinary dog. He was a golden retriever with a personality bigger than his bark. He lived with the Johnson family in a cozy house near the beach, and while everyone loved him, they all agreed on one thing: Max was trouble with a capital T.
+
+It was a sunny Saturday morning when Max's biggest adventure began. Mrs. Johnson had left a fresh batch of chocolate chip cookies cooling on the kitchen counter. She knew she should have put them higher up, but she was in a hurry to get to her gardening. "Stay out of trouble, Max," she called as she headed outside.
+
+Max's ears perked up. He could smell those cookies from anywhere in the house. His nose twitched. His tail wagged. He knew he wasn't supposed to eat human food, but those cookies smelled absolutely irresistible. He looked left. He looked right. The coast was clear.
+
+With a running start, Max leaped onto a chair, then onto the table, and finally onto the counter—a move that would have impressed any Olympic gymnast. He grabbed three cookies in his mouth and jumped down, making his escape to his favorite hiding spot under the porch.
+
+But Max had a problem. In his excitement, he had knocked over Mrs. Johnson's special flour container. White flour exploded everywhere—on the floor, on the walls, and most noticeably, all over Max. He looked like a furry white ghost!
+
+Making matters worse, when Max tried to escape through his doggy door, he got stuck. He had eaten so many cookies that his belly was too big to fit through! His back half was outside, his front half was inside, and he was completely stuck.
+
+Ten-year-old Emma Johnson found him first. "Mom! Dad! Max is stuck!" she called, trying not to laugh at the sight of her flour-covered, cookie-stuffed, door-stuck dog.
+
+The whole family came running. Dad pulled from outside while Mom pushed from inside. Pop! Max shot through the door like a cork from a bottle, rolling onto the grass in a cloud of flour.
+
+"Max!" said Mrs. Johnson, hands on her hips, trying to look stern but failing because she was trying not to laugh. "What are we going to do with you?"
+
+Max looked up at her with his big brown eyes, his tail wagging slowly, covered head to paw in white flour. If dogs could look apologetic, Max was the picture of it. Emma couldn't help herself—she burst out laughing. Soon, the whole family was laughing too.
+
+"Come on, you silly dog," said Mr. Johnson, getting the garden hose. "Bath time!"
+
+As Emma helped wash the flour off Max (and the guilty cookie crumbs), she whispered to him, "You know, Max, next time you want cookies, just ask nicely. We might actually share."
+
+Max barked once, as if to say, "Worth a try!" But deep down, he knew that where there were cookies, there would always be temptation. And where there was temptation, there would always be another Max-sized adventure waiting to happen.
+
+That night, Max slept peacefully in his dog bed, dreaming of cookies—but this time, in his dreams, he was smart enough to use the big doggy door.`,
+                questions: [
+                    {
+                        type: "multiple",
+                        question: "What kind of dog is Max?",
+                        options: [
+                            "A poodle",
+                            "A beagle",
+                            "A golden retriever",
+                            "A german shepherd"
+                        ],
+                        correct: 2
+                    },
+                    {
+                        type: "multiple",
+                        question: "Why did Max get stuck in the doggy door?",
+                        options: [
+                            "The door was broken",
+                            "He was covered in flour",
+                            "His belly was too big from eating cookies",
+                            "He was trying to carry too many cookies"
+                        ],
+                        correct: 2
+                    },
+                    {
+                        type: "multiple",
+                        question: "How did the family react when they found Max?",
+                        options: [
+                            "They were very angry",
+                            "They ignored him",
+                            "They tried not to laugh but eventually did",
+                            "They called a veterinarian"
+                        ],
+                        correct: 2
+                    },
+                    {
+                        type: "open",
+                        question: "What character traits does Max show in this story? Give at least two traits and explain with examples from the story.",
+                        rubric: "Good answer identifies character traits like: clever/sneaky (his plan to get the cookies), mischievous/trouble-maker (getting into things he shouldn't), determined (going through with his plan), lovable despite flaws. Should provide specific examples from the story to support each trait."
+                    },
+                    {
+                        type: "open",
+                        question: "The story says 'Max was trouble with a capital T.' What does this phrase mean? Can you think of a time when you or someone you know got into innocent trouble like Max?",
+                        rubric: "Good answer explains: the phrase means Max causes a lot of mischief or gets into trouble frequently, 'capital T' emphasizes how much trouble. Should include a relevant personal connection or example. Accepts any reasonable personal story about innocent mischief."
+                    }
+                ]
+            },
+            {
+                title: "How Video Games Help Kids Learn",
+                text: `Many parents and teachers worry that video games are just a waste of time, but research shows that certain video games can actually help children develop important skills and learn valuable lessons. Games like Minecraft, Roblox, and educational apps are being used in classrooms around the world because teachers have discovered their learning potential.
+
+One of the most important skills that video games can teach is problem-solving. In games like Minecraft, players face challenges that require creative thinking. For example, if you want to build a house, you need to figure out where to get materials, how to craft tools, and how to design a structure that won't fall apart. These are the same types of planning and problem-solving skills that engineers and architects use in real life!
+
+Video games also teach perseverance—the ability to keep trying even when something is difficult. When you're playing a challenging game, you might fail many times before you succeed. But instead of giving up, you learn from your mistakes, try different strategies, and eventually figure out the solution. This "growth mindset" is extremely valuable in school and in life.
+
+Many popular games encourage creativity and self-expression. In Roblox, players can create their own games and worlds using coding and design tools. This introduces children to basic programming concepts in a fun, engaging way. Some kids who start playing these games become interested in real computer programming and go on to study technology and engineering.
+
+Social skills can also be developed through multiplayer games. When playing with friends or other players online, children learn to communicate, cooperate, and work as a team. They practice negotiating (deciding what to build together), sharing resources, and resolving conflicts—all important life skills.
+
+Video games can make traditional school subjects more interesting too. History games can bring ancient civilizations to life. Math games can make practicing multiplication feel like an adventure. Language learning apps turn vocabulary practice into a competition. When learning feels like playing, students often engage more deeply with the material.
+
+Of course, like anything else, video games need to be used in moderation. Too much gaming can interfere with homework, physical activity, and family time. The key is balance. Experts recommend that parents set time limits, encourage a variety of activities, and talk with their children about what they're learning from their games.
+
+Teachers are finding creative ways to incorporate games into education. Some classrooms use Minecraft to teach everything from math to history. Students might recreate historical buildings, practice geometry by calculating areas and volumes, or learn about ecosystems by creating virtual habitats.
+
+The most important thing is choosing the right games. Educational games and creative building games offer the most learning potential. Games that encourage exploration, creativity, problem-solving, and collaboration are better choices than those that only focus on competition or violence.
+
+So the next time someone says video games are a waste of time, you can explain that when chosen wisely and played in moderation, games can actually be powerful learning tools. They teach problem-solving, creativity, perseverance, and even social skills—all while making learning feel like an adventure!`,
+                questions: [
+                    {
+                        type: "multiple",
+                        question: "According to the passage, which skill do games like Minecraft help develop?",
+                        options: [
+                            "Swimming",
+                            "Problem-solving",
+                            "Cooking",
+                            "Dancing"
+                        ],
+                        correct: 1
+                    },
+                    {
+                        type: "multiple",
+                        question: "What does 'perseverance' mean in the context of this passage?",
+                        options: [
+                            "Giving up when things are hard",
+                            "Only doing easy things",
+                            "Keeping trying even when something is difficult",
+                            "Playing games all day"
+                        ],
+                        correct: 2
+                    },
+                    {
+                        type: "multiple",
+                        question: "What do experts recommend about playing video games?",
+                        options: [
+                            "Never play video games",
+                            "Play video games all day",
+                            "Use them in moderation with time limits",
+                            "Only play violent games"
+                        ],
+                        correct: 2
+                    },
+                    {
+                        type: "open",
+                        question: "The passage mentions that some kids who play games like Roblox become interested in real programming. Why do you think playing these games might lead to an interest in technology?",
+                        rubric: "Good answer explains: games introduce coding/programming in a fun way, they see what they can create with these skills, hands-on experience makes it interesting, success in games builds confidence to try real programming, or similar connections between game experience and technology interest."
+                    },
+                    {
+                        type: "open",
+                        question: "What does the passage mean by saying games should be used 'in moderation'? Why is balance important? Give at least two reasons from the passage.",
+                        rubric: "Good answer explains moderation means not too much/balanced use. Should mention at least two reasons like: too much gaming interferes with homework, physical activity, or family time; need variety of activities; importance of other life experiences. Should show understanding of balance concept."
+                    }
+                ]
+            }
+        ];
+
+        let currentPassage = null;
+        let comprehensionAnswers = {};
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            const error = document.getElementById('passwordError');
+            
+            if (input === correctPassword) {
+                document.getElementById('passwordScreen').classList.add('hidden');
+                document.getElementById('mainContainer').classList.add('visible');
+            } else {
+                error.style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        // Allow enter key for password
+        document.getElementById('passwordInput')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function selectTopic(index) {
+            selectedTopicIndex = index;
+            const cards = document.querySelectorAll('#topicSelection .topic-card');
+            cards.forEach((card, i) => {
+                if (i === index) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+            
+            setTimeout(() => {
+                document.getElementById('topicSelection').style.display = 'none';
+                document.getElementById('writingArea').style.display = 'block';
+                document.getElementById('selectedTopicTitle').textContent = topics[index].title;
+                document.getElementById('essayText').value = '';
+                updateWordCount();
+            }, 300);
+        }
+
+        function backToTopics() {
+            document.getElementById('writingArea').style.display = 'none';
+            document.getElementById('topicSelection').style.display = 'block';
+            document.getElementById('feedbackContainer').classList.remove('show');
+            const cards = document.querySelectorAll('#topicSelection .topic-card');
+            cards.forEach(card => card.classList.remove('selected'));
+        }
+
+        function updateWordCount() {
+            const text = document.getElementById('essayText').value;
+            const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+            document.getElementById('wordCount').textContent = `Word count: ${words.length}`;
+        }
+
+        async function submitEssay() {
+            const essayText = document.getElementById('essayText').value.trim();
+            
+            if (essayText.length < 50) {
+                alert('Please write at least 150 words before submitting!');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Grading...';
+            
+            document.getElementById('loadingSpinner').classList.add('show');
+            document.getElementById('feedbackContainer').classList.remove('show');
+
+            try {
+                const prompt = `You are a supportive Grade 5 English teacher grading a student's essay. The student is Adiaha, a 10-year-old girl.
+
+Topic: ${topics[selectedTopicIndex].title}
+Prompt: ${topics[selectedTopicIndex].prompt}
+
+Essay:
+${essayText}
+
+Please provide detailed, encouraging feedback using this rubric:
+
+1. **Content & Ideas** (0-25 points): Does the essay address the topic? Are the ideas clear and relevant? Does it have good details and examples?
+
+2. **Organization & Structure** (0-20 points): Does it have a clear beginning, middle, and end? For narrative essays, check for:
+   - Rising Edge (building up to the main event)
+   - Climax (the most exciting or important moment)
+   - Falling Action (wrapping up after the climax)
+   Are ideas in logical order? Does it flow well?
+
+3. **Grammar & Mechanics** (0-20 points): Check spelling, punctuation, capitalization, and sentence structure. Are there run-on sentences or fragments?
+
+4. **Vocabulary & Word Choice** (0-20 points): Does the student use varied and appropriate vocabulary? Are there descriptive words and strong verbs?
+
+5. **Creativity & Voice** (0-15 points): Does the essay show the student's personality? Is it engaging and original?
+
+Format your response EXACTLY like this:
+
+OVERALL_SCORE: [total out of 100]
+
+CONTENT_SCORE: [score out of 25]
+CONTENT_FEEDBACK: [2-3 sentences of specific, encouraging feedback]
+
+ORGANIZATION_SCORE: [score out of 20]
+ORGANIZATION_FEEDBACK: [2-3 sentences of specific feedback - mention narrative structure elements like rising edge, climax, falling action if it's a story]
+
+GRAMMAR_SCORE: [score out of 20]
+GRAMMAR_FEEDBACK: [2-3 sentences with specific examples if there are errors]
+
+VOCABULARY_SCORE: [score out of 20]
+VOCABULARY_FEEDBACK: [2-3 sentences highlighting good word choices or suggesting improvements]
+
+CREATIVITY_SCORE: [score out of 15]
+CREATIVITY_FEEDBACK: [2-3 sentences about the student's unique voice and creativity]
+
+OVERALL_COMMENTS: [3-4 sentences of encouraging overall feedback with specific praise and 1-2 concrete suggestions for improvement]
+
+Be specific, encouraging, and educational. Point out what Adiaha did well and give her actionable suggestions for improvement.`;
+
+                // Call Netlify serverless function instead of OpenAI directly
+                const response = await fetch('/.netlify/functions/grade-essay', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        messages: [
+                            {
+                                role: 'system',
+                                content: 'You are a supportive, encouraging Grade 5 English teacher who provides detailed, specific feedback to help students improve their writing.'
+                            },
+                            {
+                                role: 'user',
+                                content: prompt
+                            }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 1500
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(`API Error: ${response.status} - ${errorData.error?.message || response.statusText}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
+
+                const feedback = data.choices[0].message.content;
+                displayFeedback(feedback);
+                
+            } catch (error) {
+                alert('Error grading essay: ' + error.message + '\n\nPlease try again!');
+                console.error('API Error:', error);
+            } finally {
+                document.getElementById('loadingSpinner').classList.remove('show');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit for Grading';
+            }
+        }
+
+        function displayFeedback(feedbackText) {
+            const container = document.getElementById('feedbackContainer');
+            
+            // Parse the feedback
+            const overallScore = feedbackText.match(/OVERALL_SCORE:\s*(\d+)/)?.[1] || '0';
+            const contentScore = feedbackText.match(/CONTENT_SCORE:\s*(\d+)/)?.[1] || '0';
+            const contentFeedback = feedbackText.match(/CONTENT_FEEDBACK:\s*(.+?)(?=\n\n|\nORGANIZATION)/s)?.[1]?.trim() || '';
+            const orgScore = feedbackText.match(/ORGANIZATION_SCORE:\s*(\d+)/)?.[1] || '0';
+            const orgFeedback = feedbackText.match(/ORGANIZATION_FEEDBACK:\s*(.+?)(?=\n\n|\nGRAMMAR)/s)?.[1]?.trim() || '';
+            const grammarScore = feedbackText.match(/GRAMMAR_SCORE:\s*(\d+)/)?.[1] || '0';
+            const grammarFeedback = feedbackText.match(/GRAMMAR_FEEDBACK:\s*(.+?)(?=\n\n|\nVOCABULARY)/s)?.[1]?.trim() || '';
+            const vocabScore = feedbackText.match(/VOCABULARY_SCORE:\s*(\d+)/)?.[1] || '0';
+            const vocabFeedback = feedbackText.match(/VOCABULARY_FEEDBACK:\s*(.+?)(?=\n\n|\nCREATIVITY)/s)?.[1]?.trim() || '';
+            const creativeScore = feedbackText.match(/CREATIVITY_SCORE:\s*(\d+)/)?.[1] || '0';
+            const creativeFeedback = feedbackText.match(/CREATIVITY_FEEDBACK:\s*(.+?)(?=\n\n|\nOVERALL_COMMENTS)/s)?.[1]?.trim() || '';
+            const overallComments = feedbackText.match(/OVERALL_COMMENTS:\s*(.+)/s)?.[1]?.trim() || '';
+
+            const getScoreClass = (score, max) => {
+                const percentage = (score / max) * 100;
+                if (percentage >= 80) return 'rubric-score';
+                if (percentage >= 60) return 'rubric-score needs-improvement';
+                return 'rubric-score poor';
+            };
+
+            container.innerHTML = `
+                <div class="overall-score">
+                    <h2>${overallScore}/100</h2>
+                    <p>${overallScore >= 90 ? '🎉 Excellent Work!' : overallScore >= 80 ? '👍 Great Job!' : overallScore >= 70 ? '📚 Good Effort!' : '💪 Keep Practicing!'}</p>
+                </div>
+
+                <div class="rubric-section">
+                    <h3>📝 Content & Ideas <span class="${getScoreClass(contentScore, 25)}">${contentScore}/25</span></h3>
+                    <p>${contentFeedback}</p>
+                </div>
+
+                <div class="rubric-section">
+                    <h3>📋 Organization & Structure <span class="${getScoreClass(orgScore, 20)}">${orgScore}/20</span></h3>
+                    <p>${orgFeedback}</p>
+                </div>
+
+                <div class="rubric-section">
+                    <h3>✏️ Grammar & Mechanics <span class="${getScoreClass(grammarScore, 20)}">${grammarScore}/20</span></h3>
+                    <p>${grammarFeedback}</p>
+                </div>
+
+                <div class="rubric-section">
+                    <h3>📚 Vocabulary & Word Choice <span class="${getScoreClass(vocabScore, 20)}">${vocabScore}/20</span></h3>
+                    <p>${vocabFeedback}</p>
+                </div>
+
+                <div class="rubric-section">
+                    <h3>✨ Creativity & Voice <span class="${getScoreClass(creativeScore, 15)}">${creativeScore}/15</span></h3>
+                    <p>${creativeFeedback}</p>
+                </div>
+
+                <div class="rubric-section" style="border-left: 5px solid #f5576c;">
+                    <h3>💬 Overall Comments</h3>
+                    <p>${overallComments}</p>
+                </div>
+
+                <button class="submit-btn" onclick="backToTopics()">Write Another Essay</button>
+            `;
+
+            container.classList.add('show');
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Reading Comprehension Functions
+        function selectPassage(index) {
+            selectedPassageIndex = index;
+            currentPassage = passages[index];
+            comprehensionAnswers = {};
+            
+            const cards = document.querySelectorAll('#passageSelection .topic-card');
+            cards.forEach((card, i) => {
+                if (i === index) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+            
+            setTimeout(() => {
+                displayPassage();
+            }, 300);
+        }
+
+        function displayPassage() {
+            const container = document.getElementById('passageReading');
+            const passage = currentPassage;
+            
+            let questionsHTML = '';
+            passage.questions.forEach((q, idx) => {
+                if (q.type === 'multiple') {
+                    questionsHTML += `
+                        <div class="question-container">
+                            <div class="question-text">${idx + 1}. ${q.question}</div>
+                            ${q.options.map((opt, optIdx) => `
+                                <div class="option" onclick="selectComprehensionOption(${idx}, ${optIdx})">
+                                    ${String.fromCharCode(65 + optIdx)}. ${opt}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    questionsHTML += `
+                        <div class="question-container">
+                            <div class="question-text">${idx + 1}. ${q.question}</div>
+                            <textarea class="open-answer" id="open-${idx}" placeholder="Write your answer here..."></textarea>
+                        </div>
+                    `;
+                }
+            });
+
+            container.innerHTML = `
+                <div class="passage-container">
+                    <h3 class="passage-title">${passage.title}</h3>
+                    <div class="passage-text">${passage.text.split('\n\n').map(p => `<p>${p}</p>`).join('')}</div>
+                </div>
+
+                <h3 style="color: #667eea; margin: 30px 0;">Answer the Questions:</h3>
+                ${questionsHTML}
+
+                <button class="submit-btn" onclick="submitComprehension()">Submit Answers</button>
+                <button class="back-btn" onclick="backToPassages()">← Choose Different Passage</button>
+                
+                <div class="loading-spinner" id="comprehensionLoading">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 20px; color: #667eea; font-weight: bold;">Checking your answers... Please wait!</p>
+                </div>
+
+                <div class="feedback-container" id="comprehensionFeedback">
+                    <!-- Feedback will be inserted here -->
+                </div>
+            `;
+
+            document.getElementById('passageSelection').style.display = 'none';
+            container.style.display = 'block';
+        }
+
+        function backToPassages() {
+            document.getElementById('passageReading').style.display = 'none';
+            document.getElementById('passageSelection').style.display = 'block';
+            const cards = document.querySelectorAll('#passageSelection .topic-card');
+            cards.forEach(card => card.classList.remove('selected'));
+        }
+
+        function selectComprehensionOption(questionIndex, optionIndex) {
+            const questionContainers = document.querySelectorAll('.question-container');
+            const options = questionContainers[questionIndex].querySelectorAll('.option');
+            
+            options.forEach((opt, idx) => {
+                opt.classList.remove('selected');
+                if (idx === optionIndex) {
+                    opt.classList.add('selected');
+                }
+            });
+            
+            comprehensionAnswers[questionIndex] = optionIndex;
+        }
+
+        async function submitComprehension() {
+            const passage = currentPassage;
+            let allAnswered = true;
+            
+            // Check if all questions are answered
+            passage.questions.forEach((q, idx) => {
+                if (q.type === 'multiple' && comprehensionAnswers[idx] === undefined) {
+                    allAnswered = false;
+                }
+                if (q.type === 'open') {
+                    const answer = document.getElementById(`open-${idx}`)?.value.trim();
+                    if (!answer) {
+                        allAnswered = false;
+                    } else {
+                        comprehensionAnswers[idx] = answer;
+                    }
+                }
+            });
+
+            if (!allAnswered) {
+                alert('Please answer all questions before submitting!');
+                return;
+            }
+
+            document.getElementById('comprehensionLoading').classList.add('show');
+            document.getElementById('comprehensionFeedback').classList.remove('show');
+
+            // Grade multiple choice immediately
+            let mcCorrect = 0;
+            let mcTotal = 0;
+            const questionContainers = document.querySelectorAll('.question-container');
+            
+            passage.questions.forEach((q, idx) => {
+                if (q.type === 'multiple') {
+                    mcTotal++;
+                    const options = questionContainers[idx].querySelectorAll('.option');
+                    options.forEach((opt, optIdx) => {
+                        opt.style.pointerEvents = 'none';
+                        if (optIdx === q.correct) {
+                            opt.classList.add('correct');
+                        }
+                        if (comprehensionAnswers[idx] === optIdx && optIdx !== q.correct) {
+                            opt.classList.add('incorrect');
+                        }
+                    });
+                    if (comprehensionAnswers[idx] === q.correct) {
+                        mcCorrect++;
+                    }
+                }
+            });
+
+            // Grade open-ended questions with AI
+            const openQuestions = passage.questions.filter(q => q.type === 'open');
+            let openFeedback = [];
+
+            if (openQuestions.length > 0) {
+                try {
+                    const openAnswers = openQuestions.map((q, idx) => {
+                        const globalIdx = passage.questions.indexOf(q);
+                        return {
+                            question: q.question,
+                            answer: comprehensionAnswers[globalIdx],
+                            rubric: q.rubric
+                        };
+                    });
+
+                    const prompt = `You are a supportive Grade 5 English teacher checking reading comprehension answers for Adiaha, a 10-year-old student.
+
+Passage Title: ${passage.title}
+
+For each open-ended answer below, evaluate it according to the rubric and provide encouraging, specific feedback.
+
+${openAnswers.map((qa, idx) => `
+Question ${idx + 1}: ${qa.question}
+Student's Answer: ${qa.answer}
+Rubric: ${qa.rubric}
+`).join('\n')}
+
+For EACH question, provide feedback in this EXACT format:
+
+QUESTION_${1}_SCORE: [Excellent/Good/Needs Improvement]
+QUESTION_${1}_FEEDBACK: [2-3 sentences of specific, encouraging feedback explaining what was good and/or what could be improved]
+
+Be specific, encouraging, and educational. Highlight what the student did well and give actionable suggestions.`;
+
+                    // Call Netlify serverless function instead of OpenAI directly
+                    const response = await fetch('/.netlify/functions/grade-essay', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            messages: [
+                                {
+                                    role: 'system',
+                                    content: 'You are a supportive Grade 5 teacher providing specific, encouraging feedback on reading comprehension answers.'
+                                },
+                                {
+                                    role: 'user',
+                                    content: prompt
+                                }
+                            ],
+                            temperature: 0.7,
+                            max_tokens: 1000
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`API Error: ${response.status} - ${errorData.error?.message || response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    
+                    if (data.error) {
+                        throw new Error(data.error.message);
+                    }
+
+                    const feedbackText = data.choices[0].message.content;
+                    
+                    // Parse feedback for each open question
+                    openQuestions.forEach((q, idx) => {
+                        const num = idx + 1;
+                        const scoreMatch = feedbackText.match(new RegExp(`QUESTION_${num}_SCORE:\\s*(.+?)(?=\\n|$)`, 'i'));
+                        const feedbackMatch = feedbackText.match(new RegExp(`QUESTION_${num}_FEEDBACK:\\s*(.+?)(?=\\n\\nQUESTION_|$)`, 's'));
+                        
+                        openFeedback.push({
+                            score: scoreMatch?.[1]?.trim() || 'Good',
+                            feedback: feedbackMatch?.[1]?.trim() || 'Good answer!'
+                        });
+                    });
+
+                } catch (error) {
+                    console.error('Error grading open questions:', error);
+                    openQuestions.forEach(() => {
+                        openFeedback.push({
+                            score: 'Good',
+                            feedback: 'Great effort on your answer!'
+                        });
+                    });
+                }
+            }
+
+            // Display comprehensive feedback
+            displayComprehensionFeedback(mcCorrect, mcTotal, openFeedback);
+            
+            document.getElementById('comprehensionLoading').classList.remove('show');
+        }
+
+        function displayComprehensionFeedback(mcCorrect, mcTotal, openFeedback) {
+            const container = document.getElementById('comprehensionFeedback');
+            const passage = currentPassage;
+            
+            const mcPercentage = mcTotal > 0 ? Math.round((mcCorrect / mcTotal) * 100) : 100;
+            
+            let openHTML = '';
+            let openIdx = 0;
+            passage.questions.forEach((q, idx) => {
+                if (q.type === 'open') {
+                    const feedback = openFeedback[openIdx];
+                    const scoreClass = feedback.score === 'Excellent' ? 'rubric-score' : 
+                                     feedback.score === 'Good' ? 'rubric-score needs-improvement' : 
+                                     'rubric-score poor';
+                    
+                    openHTML += `
+                        <div class="rubric-section">
+                            <h3>Question ${idx + 1} <span class="${scoreClass}">${feedback.score}</span></h3>
+                            <p style="font-style: italic; color: #666; margin-bottom: 10px;">"${q.question}"</p>
+                            <p><strong>Your answer:</strong> ${comprehensionAnswers[idx]}</p>
+                            <p style="margin-top: 10px;"><strong>Feedback:</strong> ${feedback.feedback}</p>
+                        </div>
+                    `;
+                    openIdx++;
+                }
+            });
+
+            container.innerHTML = `
+                <div class="overall-score">
+                    <h2>Multiple Choice: ${mcCorrect}/${mcTotal}</h2>
+                    <p>${mcPercentage >= 80 ? '🎉 Excellent!' : mcPercentage >= 60 ? '👍 Good job!' : '📚 Keep practicing!'}</p>
+                </div>
+
+                ${openHTML}
+
+                <button class="submit-btn" onclick="backToPassages()">Read Another Passage</button>
+            `;
+
+            container.classList.add('show');
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+</html>

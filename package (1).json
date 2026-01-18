@@ -1,0 +1,12 @@
+{
+  "name": "adiaha-writing-tool",
+  "version": "1.0.0",
+  "description": "Composition and comprehension practice tool with AI grading",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"No tests specified\""
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}
