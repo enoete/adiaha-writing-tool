@@ -489,11 +489,51 @@
             <h2 class="section-title">📝 Composition Practice</h2>
             
             <div class="instructions">
-                <h4>📝 Instructions:</h4>
-                <p>1. Choose a topic that interests you<br>
-                2. Write your essay in the text box (aim for at least 150 words)<br>
-                3. Click "Submit for Grading" to get detailed feedback<br>
-                4. Review your feedback and learn from the suggestions!</p>
+                <h4>📝 How This Works:</h4>
+                <p>1. Read the writing tips below<br>
+                2. Choose a topic that interests you<br>
+                3. Write your essay in the text box (aim for at least 150 words)<br>
+                4. Click "Submit for Grading" to get detailed feedback<br>
+                5. Review your feedback and improve!</p>
+            </div>
+
+            <!-- Writing Tips Section -->
+            <div class="concept-box" style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); margin: 30px 0;">
+                <h3 style="color: #333; font-size: 1.6em; margin-bottom: 20px;">✍️ Writing Tips to Remember</h3>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                    <h4 style="color: #667eea; margin-bottom: 10px;">📖 Story Structure (For Narrative Essays):</h4>
+                    <ul style="margin-left: 25px; line-height: 1.8;">
+                        <li><strong>Beginning (Introduction):</strong> Set the scene. Where are you? Who is there? What's about to happen?</li>
+                        <li><strong>Rising Edge:</strong> Build up excitement! Add details and events leading to the main moment.</li>
+                        <li><strong>Climax:</strong> The most exciting or important part! What's the big moment in your story?</li>
+                        <li><strong>Falling Action:</strong> What happens after? How do things calm down?</li>
+                        <li><strong>Ending (Conclusion):</strong> Wrap it up! How did you feel? What did you learn?</li>
+                    </ul>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                    <h4 style="color: #667eea; margin-bottom: 10px;">✏️ Good Writing Checklist:</h4>
+                    <ul style="margin-left: 25px; line-height: 1.8;">
+                        <li><strong>Use descriptive words:</strong> Instead of "good," try "amazing," "wonderful," "delicious"</li>
+                        <li><strong>Show, don't just tell:</strong> Instead of "I was happy," write "I smiled so wide my cheeks hurt"</li>
+                        <li><strong>Vary your sentences:</strong> Mix short and long sentences to keep it interesting</li>
+                        <li><strong>Use the five senses:</strong> What did you see, hear, smell, taste, or feel?</li>
+                        <li><strong>Add dialogue:</strong> What did people say? Use quotation marks!</li>
+                        <li><strong>Check your spelling and punctuation:</strong> Read it out loud to catch mistakes</li>
+                    </ul>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                    <h4 style="color: #667eea; margin-bottom: 10px;">🎯 Before You Submit:</h4>
+                    <ul style="margin-left: 25px; line-height: 1.8;">
+                        <li>Did you stay on topic?</li>
+                        <li>Does your essay have a clear beginning, middle, and end?</li>
+                        <li>Did you use capital letters at the start of sentences and for proper nouns?</li>
+                        <li>Did you check for run-on sentences?</li>
+                        <li>Is your essay at least 150 words? (Check the word counter!)</li>
+                    </ul>
+                </div>
             </div>
 
             <div id="topicSelection">
@@ -605,35 +645,99 @@
         const topics = [
             {
                 title: "🐕 A Day with Cookie, Kreme, and Coco",
-                prompt: "Write about an adventure or special day with your three dogs. What do they like to do? What makes each one special?"
+                prompt: "Write about an adventure or special day with your three dogs. What do they like to do? What makes each one special?",
+                hints: [
+                    "What makes each dog unique? Describe their personalities!",
+                    "What sounds did they make? (barking, whimpering, panting)",
+                    "What did they do that made you laugh or smile?",
+                    "Use the five senses: What did their fur feel like? What did you hear? Smell?",
+                    "What was the most exciting moment of the day? (This could be your climax!)",
+                    "How did the day end? What did you learn about your dogs?"
+                ]
             },
             {
                 title: "🌷 My Adventures in Holland",
-                prompt: "Describe your trip to Holland this summer. What did you see? What was your favorite experience?"
+                prompt: "Describe your trip to Holland this summer. What did you see? What was your favorite experience?",
+                hints: [
+                    "What was different from home? Compare and contrast!",
+                    "Describe what you saw: windmills, tulips, canals?",
+                    "What did you taste? Try? Experience for the first time?",
+                    "What surprised you the most? (Great for your climax!)",
+                    "What will you always remember about Holland?",
+                    "How did you feel exploring a new country?"
+                ]
             },
             {
                 title: "🏝️ Life on Our Island Paradise",
-                prompt: "Explain what it's like to live on an island. What makes island life special?"
+                prompt: "Explain what it's like to live on an island. What makes island life special?",
+                hints: [
+                    "What do you see when you look outside your window?",
+                    "What sounds do you hear? (waves, birds, wind?)",
+                    "What can you do on an island that people in other places can't?",
+                    "Describe a typical day - what makes it special?",
+                    "What do you love most about island living?",
+                    "If you could tell someone who's never been to an island one thing, what would it be?"
+                ]
             },
             {
                 title: "🎮 If I Could Build Anything in Minecraft",
-                prompt: "Imagine you could build anything you want in Minecraft. What would you create?"
+                prompt: "Imagine you could build anything you want in Minecraft. What would you create?",
+                hints: [
+                    "Describe your creation in detail - what does it look like?",
+                    "What materials would you use? (diamonds, obsidian, redstone?)",
+                    "How would it work? What special features would it have?",
+                    "Why did you choose to build THIS instead of something else?",
+                    "Walk us through building it - what would you do first, second, third?",
+                    "What would be the coolest part about finishing your build?"
+                ]
             },
             {
                 title: "🎵 My Journey as a Calypso Singer",
-                prompt: "Write about your experiences singing Calypso. What do you love about it?"
+                prompt: "Write about your experiences singing Calypso. What do you love about it?",
+                hints: [
+                    "How did you start singing Calypso? Tell the story!",
+                    "How do you feel when you're performing? Nervous? Excited? Confident?",
+                    "Describe a memorable performance - what made it special?",
+                    "What's your favorite song? Why?",
+                    "What's the hardest part about being a Calypso singer?",
+                    "What do you want people to feel when they hear you sing?"
+                ]
             },
             {
                 title: "🍕 The Perfect Pizza Party",
-                prompt: "Describe your dream pizza party with all your favorite toppings."
+                prompt: "Describe your dream pizza party with all your favorite toppings.",
+                hints: [
+                    "Who would you invite? Why those people?",
+                    "Describe the pizzas in detail - what toppings? How do they look, smell, taste?",
+                    "Where would the party be? Set the scene!",
+                    "What games or activities would you do?",
+                    "What would be the best moment of the party? (Your climax!)",
+                    "How would the party end? What would people say as they leave?"
+                ]
             },
             {
                 title: "⭐ A Person Who Inspires Me",
-                prompt: "Write about someone who inspires you and why."
+                prompt: "Write about someone who inspires you and why.",
+                hints: [
+                    "Who is this person? How do you know them?",
+                    "What have they done that amazes you?",
+                    "Give specific examples of their actions or words",
+                    "How have they changed your life or thinking?",
+                    "What qualities do they have that you admire?",
+                    "What have you learned from them that you'll never forget?"
+                ]
             },
             {
                 title: "🦸‍♀️ If I Could Have Any Superpower",
-                prompt: "If you could have any superpower, what would it be and how would you use it?"
+                prompt: "If you could have any superpower, what would it be and how would you use it?",
+                hints: [
+                    "Which superpower and WHY that one?",
+                    "Describe what it would feel like to use this power",
+                    "How would you use it to help others?",
+                    "What adventure would you have with this power? Tell the story!",
+                    "What would be a funny or unexpected problem with this power?",
+                    "Would you keep it secret or tell everyone? Why?"
+                ]
             }
         ];
 
@@ -1024,6 +1128,23 @@ So the next time someone says video games are a waste of time, you can explain t
                 document.getElementById('topicSelection').style.display = 'none';
                 document.getElementById('writingArea').style.display = 'block';
                 document.getElementById('selectedTopicTitle').textContent = topics[index].title;
+                
+                // Display topic-specific hints
+                const hintsHTML = `
+                    <div class="concept-box" style="background: #fff3cd; border-left: 5px solid #ffc107; margin-bottom: 20px;">
+                        <h4 style="color: #856404; margin-bottom: 15px;">💡 Questions to Help You Write:</h4>
+                        <ul style="margin-left: 25px; line-height: 1.8; color: #666;">
+                            ${topics[index].hints.map(hint => `<li>${hint}</li>`).join('')}
+                        </ul>
+                        <p style="margin-top: 15px; font-style: italic; color: #856404;">
+                            <strong>Remember:</strong> You don't have to answer ALL these questions - they're just to help you think of ideas!
+                        </p>
+                    </div>
+                `;
+                
+                const titleElement = document.getElementById('selectedTopicTitle');
+                titleElement.insertAdjacentHTML('afterend', hintsHTML);
+                
                 document.getElementById('essayText').value = '';
                 updateWordCount();
             }, 300);
@@ -1033,6 +1154,13 @@ So the next time someone says video games are a waste of time, you can explain t
             document.getElementById('writingArea').style.display = 'none';
             document.getElementById('topicSelection').style.display = 'block';
             document.getElementById('feedbackContainer').classList.remove('show');
+            
+            // Remove hints when going back
+            const hintsBox = document.querySelector('#writingArea .concept-box');
+            if (hintsBox) {
+                hintsBox.remove();
+            }
+            
             const cards = document.querySelectorAll('#topicSelection .topic-card');
             cards.forEach(card => card.classList.remove('selected'));
         }
